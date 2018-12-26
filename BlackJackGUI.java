@@ -1,10 +1,11 @@
 import javax.swing.*;
+
 public class BlackJackGUI {
     public static void main(String[] args) {
         BlackJack black = new BlackJack();
         String[] options = {"Hit", "Stay"};
         JOptionPane.showMessageDialog(null, "Welcome to this BlackJack Game!", "BlackJack Emulator", JOptionPane.INFORMATION_MESSAGE);
-        int w;
+        int w = 0;
         do {
             if (black.blackjack(black.getPlayerHand())) {
                 JOptionPane.showMessageDialog(null, "Player has Won!", "BlackJack Game", JOptionPane.INFORMATION_MESSAGE);
@@ -25,9 +26,23 @@ public class BlackJackGUI {
                                 " \n Hit or Stay?", "BlackJack Game", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                         null, options, null);
             }
-            while(black.getDealerHand().addUp() < 14 && !black.bust(black.getPlayerHand()))
+            if(black.bust(black.getPlayerHand()))
+            {
+                JOptionPane.showMessageDialog(null, "You bust! You had: " + black.getPlayerHand(), "BlackJack Game", JOptionPane.INFORMATION_MESSAGE);
+                black.reset();
+                continue;
+            }
+            while(black.getDealerHand().addUp() < 15 && !black.bust(black.getPlayerHand()))
             {
                 black.dealerDeal();
+                if (black.bust(black.getDealerHand())) {
+                    break;
+                }
+            }
+            if (black.bust(black.getDealerHand())) {
+                JOptionPane.showMessageDialog(null, "Dealer bust! Dealer had: " + black.getDealerHand());
+                black.reset();
+                continue;
             }
             if (black.win()) {
                 JOptionPane.showMessageDialog(null, "Player has Won! \n Player Had: " + black.getPlayerHand() +
